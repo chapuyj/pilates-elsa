@@ -1,0 +1,12 @@
+---
+// Flèche des boutons et des liens. « out » : flèche en diagonale, pour un lien qui quitte le site.
+interface Props {
+  out?: boolean;
+  size?: number;
+}
+const { out = false, size = 16 } = Astro.props;
+---
+
+<svg width={size} height={size} viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  {out ? <path d="M4.5 11.5 11.5 4.5M5.5 4.5h6v6" /> : <path d="M2.5 8h11M9 3.5 13.5 8 9 12.5" />}
+</svg>

@@ -1,0 +1,42 @@
+# Tous les prix du site sont ici, et nulle part ailleurs.
+#
+# - « offre » doit correspondre au nom d'un fichier de src/content/offres/ (sans .md).
+# - « prix » est en euros. Tant qu'il est vide, le site affiche « Sur demande ».
+# - Pour ajouter une ligne, recopier un bloc et changer son id (unique).
+#
+# Aucun prix n'est encore fixé : à compléter avec Elsa (voir docs/questions-elsa.md).
+
+- id: particulier-seance
+  offre: cours-particuliers
+  libelle: Séance individuelle
+  prix:
+  unite: la séance
+
+- id: particulier-duo
+  offre: cours-particuliers
+  libelle: Séance en duo
+  prix:
+  unite: par personne
+
+- id: particulier-carte
+  offre: cours-particuliers
+  libelle: Carte de plusieurs séances
+  prix:
+
+- id: visio-seance
+  offre: pilates-en-visio
+  libelle: Séance individuelle en visio
+  prix:
+  unite: la séance
+
+- id: entreprise-devis
+  offre: pilates-en-entreprise
+  libelle: Intervention en entreprise
+  prix:
+  note: Sur devis, selon le format et la taille du groupe.
+
+- id: studio-tarifs
+  offre: cours-en-studio
+  libelle: Cours collectifs en studio
+  prix:
+  note: Les tarifs et les abonnements sont ceux de chaque studio.

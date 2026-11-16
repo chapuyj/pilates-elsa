@@ -1,0 +1,53 @@
+# Les questions fréquentes.
+# Les questions d'un même « theme » sont regroupées, dans l'ordre de ce fichier.
+# Pour ajouter une question, recopier un bloc et changer son id (unique).
+
+- id: debutant
+  theme: Débuter
+  question: Faut-il déjà avoir pratiqué pour commencer ?
+  reponse: Non. Le Pilates s'adresse aussi aux personnes qui n'ont jamais pratiqué. Les premiers cours servent à apprendre la respiration et les placements de base, à votre rythme.
+
+- id: souplesse
+  theme: Débuter
+  question: Faut-il être souple ou sportif ?
+  reponse: Non. Chaque exercice s'adapte à votre corps tel qu'il est aujourd'hui. La souplesse et la force viennent avec la pratique.
+
+- id: frequence
+  theme: Débuter
+  question: À quelle fréquence pratiquer ?
+  reponse: La régularité compte plus que l'intensité. Une séance par semaine permet déjà de progresser, deux séances accélèrent les effets.
+
+- id: tapis-machines
+  theme: La méthode
+  question: Quelle différence entre le Pilates sur tapis et sur machines ?
+  reponse: Sur tapis, vous travaillez avec le poids du corps. Sur machines, des ressorts accompagnent le mouvement ou lui résistent. Les principes sont les mêmes et les deux pratiques se complètent.
+
+- id: respiration
+  theme: La méthode
+  question: Pourquoi la respiration est-elle si importante ?
+  reponse: La respiration est la base du Pilates. Elle engage les muscles profonds, donne son rythme au mouvement et aide à se concentrer sur ce que fait le corps.
+
+- id: yoga
+  theme: La méthode
+  question: Quelle différence avec le yoga ?
+  reponse: Les deux disciplines travaillent le corps et la respiration. Le Pilates met l'accent sur le renforcement des muscles profonds et sur la précision du mouvement, sans dimension spirituelle.
+
+- id: grossesse
+  theme: Situations particulières
+  question: Peut-on pratiquer pendant ou après une grossesse ?
+  reponse: Oui, avec des exercices adaptés et l'accord de votre médecin ou de votre sage-femme. Signalez votre grossesse ou votre accouchement récent avant le premier cours.
+
+- id: douleurs
+  theme: Situations particulières
+  question: Je souffre du dos, est-ce pour moi ?
+  reponse: Le Pilates renforce les muscles qui soutiennent la colonne. En cas de douleur ou de pathologie, demandez d'abord l'avis de votre médecin et prévenez Elsa, qui adaptera la séance.
+
+- id: tenue
+  theme: En pratique
+  question: Quelle tenue prévoir ?
+  reponse: Une tenue souple et près du corps, dans laquelle vous bougez librement. Certains studios demandent des chaussettes antidérapantes pour le Reformer.
+
+- id: reserver-studio
+  theme: En pratique
+  question: Comment réserver un cours en studio avec Elsa ?
+  reponse: La réservation se fait sur le planning de chaque studio. Pour les cours particuliers, en visio ou en entreprise, écrivez directement à Elsa.

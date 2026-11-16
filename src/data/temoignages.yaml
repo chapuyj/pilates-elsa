@@ -1,0 +1,11 @@
+# Avis d'élèves. Uniquement de vrais avis, publiés avec l'accord de la personne.
+# Tant que cette liste est vide, la section « témoignages » n'apparaît pas sur le site.
+#
+# Exemple à recopier (en retirant les # et les crochets) :
+#
+# - id: prenom-1
+#   prenom: Prénom
+#   texte: Le texte de l'avis.
+#   contexte: Cours particuliers
+
+[]

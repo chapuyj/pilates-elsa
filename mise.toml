@@ -1,2 +1,24 @@
 [tools]
 node = "26.12.1"
+
+# Lancer le site en local : `mise run dev` (ou simplement `mise run`).
+[tasks.install]
+description = "Installe les dépendances (seulement si elles ont changé)"
+run = "npm install"
+sources = ["package.json", "package-lock.json"]
+outputs = ["node_modules/.package-lock.json"]
+
+[tasks.dev]
+description = "Lance le site en local sur http://localhost:4321, brouillons compris"
+alias = "default"
+depends = ["install"]
+run = "npm run dev"
+
+[tasks.build]
+description = "Construit le site publié dans dist/ après vérification des fichiers"
+depends = ["install"]
+run = ["npm run check", "npm run build"]
+
+[tasks.preview]
+description = "Affiche le site tel qu'il sera publié (lancer `mise run build` avant)"
+run = "npm run preview"

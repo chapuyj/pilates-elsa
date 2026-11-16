@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "site",
+      "runtimeExecutable": "mise",
+      "runtimeArgs": ["exec", "--", "node", "node_modules/astro/bin/astro.mjs", "dev", "--port", "4321"],
+      "port": 4321
+    },
+    {
+      "name": "site-publie",
+      "runtimeExecutable": "mise",
+      "runtimeArgs": ["exec", "--", "node", "node_modules/astro/bin/astro.mjs", "preview", "--port", "4322"],
+      "port": 4322
+    }
+  ]
+}

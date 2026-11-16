@@ -1,0 +1,20 @@
+# Les studios où Elsa enseigne.
+# Chaque bloc commence par « - id: » ; l'id ne s'affiche pas, il doit juste être unique.
+
+- id: lm-studio
+  nom: LM Studio
+  adresse: 12 rue de Paris
+  codePostal: "94340"
+  ville: Joinville-le-Pont
+  site: https://www.lmstudio.fit
+  planning: https://www.lmstudio.fit/planning
+  presentation: Studio de Pilates Reformer en petit groupe, neuf machines par cours.
+
+- id: reform-you
+  nom: Reform'You
+  adresse: 21 avenue Foch
+  codePostal: "94100"
+  ville: Saint-Maur-des-Fossés
+  site: https://reformyou.fr
+  planning: https://reformyou.fr/planning/
+  presentation: Studio de Pilates Reformer en petit groupe, huit personnes au maximum par cours.
