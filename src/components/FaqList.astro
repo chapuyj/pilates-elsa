@@ -1,0 +1,82 @@
+---
+// Une liste de questions qui s'ouvrent au clic. Source : src/data/faq.yaml.
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  questions: CollectionEntry<'faq'>[];
+}
+const { questions } = Astro.props;
+---
+
+<div class="faq-list">
+  {
+    questions.map((item) => (
+      <details>
+        <summary>
+          <h3>{item.data.question}</h3>
+          <span class="faq-mark" aria-hidden="true" />
+        </summary>
+        <p class="muted">{item.data.reponse}</p>
+      </details>
+    ))
+  }
+</div>
+
+<style>
+  details {
+    border-top: 1px solid var(--stone);
+  }
+
+  details:last-child {
+    border-bottom: 1px solid var(--stone);
+  }
+
+  summary {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 1.5rem;
+    padding-block: 1.375rem;
+    list-style: none;
+    cursor: pointer;
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  h3 {
+    font-weight: 400;
+  }
+
+  /* Le signe plus, qui devient moins quand la réponse est ouverte. */
+  .faq-mark {
+    position: relative;
+    width: 1rem;
+    height: 1rem;
+  }
+
+  .faq-mark::before,
+  .faq-mark::after {
+    content: '';
+    position: absolute;
+    inset: 50% 0 auto;
+    height: 1.5px;
+    margin-top: -0.75px;
+    background: currentColor;
+    transition: transform 0.35s var(--ease-out);
+  }
+
+  .faq-mark::after {
+    transform: rotate(90deg);
+  }
+
+  details[open] .faq-mark::after {
+    transform: rotate(0deg);
+  }
+
+  p {
+    max-width: 62ch;
+    padding-bottom: 1.5rem;
+  }
+</style>

@@ -1,0 +1,133 @@
+---
+// Tous les prix du site, regroupés par offre. Source unique : src/data/tarifs.yaml.
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import Arrow from '../components/Arrow.astro';
+import Closing from '../components/Closing.astro';
+import { site } from '../config/site';
+import { offresPubliees } from '../lib/offres';
+import { dansLOrdre } from '../lib/listes';
+import { afficherPrix } from '../lib/prix';
+
+const tarifs = dansLOrdre(await getCollection('tarifs'));
+const groupes = (await offresPubliees())
+  .map((offre) => ({ offre, lignes: tarifs.filter((tarif) => tarif.data.offre === offre.id) }))
+  .filter((groupe) => groupe.lignes.length > 0);
+---
+
+<Base
+  title={`Tarifs des cours de Pilates | ${site.name}`}
+  description="Les tarifs des cours de Pilates avec Elsa : cours particuliers, visio, studio et entreprise, dans le Val-de-Marne."
+>
+  <PageHead titre="Tarifs" intro="Un tarif par format de cours. Quand un prix n'est pas encore affiché, écrivez à Elsa : elle vous répond." />
+
+  <section class="prices">
+    <div class="wrap">
+      {
+        groupes.map(({ offre, lignes }) => (
+          <div class="group">
+            <div class="group-head">
+              <h2>{offre.data.titreCourt}</h2>
+              <a class="arrow-link" href={`/${offre.id}/`}>
+                En savoir plus <Arrow />
+              </a>
+            </div>
+            <ul class="rows">
+              {lignes.map((tarif) => (
+                <li>
+                  <span class="label">
+                    {tarif.data.libelle}
+                    {tarif.data.note && <small class="muted">{tarif.data.note}</small>}
+                  </span>
+                  <span class="price">
+                    {afficherPrix(tarif.data.prix)}
+                    {tarif.data.prix !== null && tarif.data.unite && <small class="muted">{tarif.data.unite}</small>}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <Closing titre="Une question sur les tarifs ?" texte="Dites à Elsa ce que vous cherchez : elle vous indique la formule la plus adaptée." />
+</Base>
+
+<style>
+  .prices {
+    padding-bottom: var(--section);
+  }
+
+  .group {
+    display: grid;
+    grid-template-columns: 5fr 7fr;
+    align-items: start;
+    gap: 1.5rem clamp(2rem, 6vw, 6rem);
+    padding-block: clamp(2rem, 4vw, 3.5rem);
+    border-top: 1px solid var(--stone);
+  }
+
+  .group-head {
+    display: grid;
+    justify-items: start;
+    gap: 1.25rem;
+  }
+
+  .group-head h2 {
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+  }
+
+  .rows li {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 2rem;
+    padding-block: 1.25rem;
+  }
+
+  .rows li:first-child {
+    border-top: 0;
+    padding-top: 0.35rem;
+  }
+
+  .rows li:last-child {
+    border-bottom: 0;
+  }
+
+  .label,
+  .price {
+    display: grid;
+    gap: 0.25rem;
+  }
+
+  .label {
+    font-size: var(--text-lead);
+  }
+
+  .label small {
+    max-width: 44ch;
+  }
+
+  .price {
+    flex: none;
+    justify-items: end;
+    font-size: var(--text-lead);
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+  }
+
+  small {
+    font-size: var(--text-small);
+    font-weight: 400;
+  }
+
+  @media (max-width: 56rem) {
+    .group {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

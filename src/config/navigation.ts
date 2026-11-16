@@ -7,5 +7,8 @@ export const navigation = [
   { label: 'Articles', href: '/articles/' },
 ] as const;
 
+/** La page des articles : son lien disparaît du menu tant qu'aucun article n'est publié. */
+export const articlesHref = '/articles/';
+
 /** La page de contact, appelée depuis tous les boutons « Écrire à Elsa ». */
 export const contactHref = '/contact/';

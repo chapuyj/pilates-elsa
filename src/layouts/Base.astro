@@ -1,9 +1,11 @@
 ---
 import '@fontsource-variable/figtree';
 import '../styles/global.css';
+import { getImage } from 'astro:assets';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { site } from '../config/site';
+import photoPartage from '../assets/photos/accueil-reformer.jpg';
 
 interface Props {
   /** Titre de la page pour Google et l'onglet du navigateur. */
@@ -12,10 +14,19 @@ interface Props {
   description: string;
   /** Accueil : la navigation est posée sur la grande photo. */
   overlay?: boolean;
+  /** Données structurées pour Google (voir src/lib/jsonld.ts). */
+  jsonLd?: object | object[];
+  /** Page à ne jamais faire indexer (page introuvable, par exemple). */
+  noindex?: boolean;
 }
 
-const { title, description, overlay = false } = Astro.props;
+const { title, description, overlay = false, jsonLd, noindex = false } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
+const donnees = jsonLd ? [jsonLd].flat() : [];
+
+// Image affichée quand la page est partagée (réseaux sociaux, messageries).
+const partage = await getImage({ src: photoPartage, width: 1200, height: 630, fit: 'cover', format: 'jpg' });
+const imagePartage = new URL(partage.src, Astro.site);
 ---
 
 <!doctype html>
@@ -26,15 +37,22 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    {!site.indexable && <meta name="robots" content="noindex, nofollow" />}
+    {(!site.indexable || noindex) && <meta name="robots" content="noindex, nofollow" />}
     <meta name="theme-color" content="#f6f2ec" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate" type="application/rss+xml" title={`${site.name} : les articles`} href="/rss.xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="fr_FR" />
     <meta property="og:site_name" content={site.name} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
-    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta property="og:image" content={imagePartage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    {donnees.map((bloc) => <script type="application/ld+json" is:inline set:html={JSON.stringify(bloc)} />)}
   </head>
   <body>
     <a class="skip-link" href="#contenu">Aller au contenu</a>

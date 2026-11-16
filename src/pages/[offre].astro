@@ -1,0 +1,169 @@
+---
+// Une page par offre : le texte vient de src/content/offres/, les prix de src/data/tarifs.yaml.
+import { getCollection, render } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import Arrow from '../components/Arrow.astro';
+import OfferGrid from '../components/OfferGrid.astro';
+import StudioList from '../components/StudioList.astro';
+import Closing from '../components/Closing.astro';
+import { site } from '../config/site';
+import { contactHref } from '../config/navigation';
+import { offresPubliees } from '../lib/offres';
+import { dansLOrdre } from '../lib/listes';
+import { afficherPrix } from '../lib/prix';
+import { donneesOffre } from '../lib/jsonld';
+
+export async function getStaticPaths() {
+  const offres = await offresPubliees();
+  return offres.map((offre) => ({ params: { offre: offre.id }, props: { offre } }));
+}
+
+interface Props {
+  offre: CollectionEntry<'offres'>;
+}
+const { offre } = Astro.props;
+const { Content } = await render(offre);
+
+const tarifs = dansLOrdre(await getCollection('tarifs', ({ data }) => data.offre === offre.id));
+const autresOffres = (await offresPubliees()).filter((autre) => autre.id !== offre.id);
+const enStudio = offre.data.action === 'studios';
+---
+
+<Base title={`${offre.data.titre} | ${site.name}`} description={offre.data.description} jsonLd={donneesOffre(offre)}>
+  <PageHead titre={offre.data.titre} intro={offre.data.resume} photo={offre.data.photo} photoAlt={offre.data.photoAlt}>
+    {
+      enStudio ? (
+        <a class="btn btn--ink" href="#studios">Voir les studios <Arrow /></a>
+      ) : (
+        <a class="btn btn--ink" href={`${contactHref}?sujet=${offre.id}`}>Écrire à Elsa <Arrow /></a>
+      )
+    }
+  </PageHead>
+
+  <section class="details">
+    <div class="wrap">
+      <div class="prose">
+        <Content />
+      </div>
+
+      {
+        tarifs.length > 0 && (
+          <aside class="prices" aria-labelledby="titre-tarifs">
+            <h2 id="titre-tarifs">Tarifs</h2>
+            <ul class="rows">
+              {tarifs.map((tarif) => (
+                <li>
+                  <span class="label">
+                    {tarif.data.libelle}
+                    {tarif.data.note && <small class="muted">{tarif.data.note}</small>}
+                  </span>
+                  <span class="price">
+                    {afficherPrix(tarif.data.prix)}
+                    {tarif.data.prix !== null && tarif.data.unite && <small class="muted">{tarif.data.unite}</small>}
+                  </span>
+                </li>
+              ))}
+            </ul>
+            <a class="arrow-link" href="/tarifs/">Tous les tarifs <Arrow /></a>
+          </aside>
+        )
+      }
+    </div>
+  </section>
+
+  {
+    enStudio && (
+      <section class="panel" id="studios">
+        <div class="wrap">
+          <div class="section-head">
+            <h2>Les studios</h2>
+            <p class="lead muted">Ouvrez le planning du studio, puis choisissez un cours donné par Elsa.</p>
+          </div>
+          <StudioList />
+        </div>
+      </section>
+    )
+  }
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Les autres façons de pratiquer</h2>
+      </div>
+      <OfferGrid offres={autresOffres} />
+    </div>
+  </section>
+
+  <Closing sujet={enStudio ? undefined : offre.id} />
+</Base>
+
+<style>
+  .details {
+    padding-block: clamp(1rem, 3vw, 2.5rem) var(--section);
+  }
+
+  .details .wrap {
+    display: grid;
+    grid-template-columns: 7fr 5fr;
+    align-items: start;
+    gap: 3rem clamp(2rem, 7vw, 7rem);
+  }
+
+  .prices {
+    position: sticky;
+    top: 2rem;
+    display: grid;
+    justify-items: start;
+    gap: 1.5rem;
+    padding: clamp(1.5rem, 2.6vw, 2.25rem);
+    border-radius: var(--r-media);
+    background: var(--linen);
+  }
+
+  .prices h2 {
+    font-size: clamp(1.625rem, 2.6vw, 2.125rem);
+  }
+
+  .prices ul {
+    width: 100%;
+  }
+
+  .prices li {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1.5rem;
+    padding-block: 1.1rem;
+  }
+
+  .label,
+  .price {
+    display: grid;
+    gap: 0.2rem;
+  }
+
+  .price {
+    flex: none;
+    justify-items: end;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+  }
+
+  small {
+    font-size: var(--text-small);
+    font-weight: 400;
+  }
+
+  @media (max-width: 56rem) {
+    .details .wrap {
+      grid-template-columns: 1fr;
+    }
+
+    .prices {
+      position: static;
+    }
+  }
+</style>

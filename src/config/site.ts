@@ -32,6 +32,19 @@ export const site = {
     instagram: null as string | null,
     /** Lien WhatsApp complet. On n'affiche jamais de numéro de téléphone. */
     whatsappUrl: null as string | null,
+    /** Adresse du service qui reçoit le formulaire de contact. À renseigner à la mise en ligne. */
+    formEndpoint: null as string | null,
+  },
+
+  /** Informations obligatoires des mentions légales. À compléter avant la mise en ligne. */
+  legal: {
+    /** Nom et prénom de la personne qui édite le site. */
+    editeur: null as string | null,
+    /** Statut : « Entrepreneur individuel (micro-entreprise) », par exemple. */
+    statut: null as string | null,
+    siret: null as string | null,
+    /** Adresse professionnelle ou de domiciliation. */
+    adresse: null as string | null,
   },
 } as const;
 

@@ -1,0 +1,46 @@
+---
+// Les studios où Elsa enseigne, avec le lien vers leur planning. Source : src/data/lieux.yaml.
+import { getCollection } from 'astro:content';
+import Arrow from './Arrow.astro';
+import { dansLOrdre } from '../lib/listes';
+
+const lieux = dansLOrdre(await getCollection('lieux'));
+---
+
+<ul class="rows studio-list">
+  {
+    lieux.map((lieu) => (
+      <li>
+        <h3>{lieu.data.nom}</h3>
+        <p class="muted">
+          {lieu.data.adresse}, {lieu.data.codePostal} {lieu.data.ville}
+        </p>
+        <a class="arrow-link" href={lieu.data.planning} rel="noopener">
+          Voir le planning <Arrow out />
+        </a>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  li {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr auto;
+    align-items: baseline;
+    gap: 0.5rem 2rem;
+  }
+
+  h3 {
+    font-size: clamp(1.5rem, 2.6vw, 2.25rem);
+    font-weight: 400;
+    letter-spacing: -0.025em;
+  }
+
+  @media (max-width: 56rem) {
+    li {
+      grid-template-columns: 1fr;
+      justify-items: start;
+    }
+  }
+</style>

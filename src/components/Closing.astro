@@ -1,0 +1,53 @@
+---
+// Le bloc sombre de fin de page, qui invite à écrire à Elsa.
+import Arrow from './Arrow.astro';
+import { contactHref } from '../config/navigation';
+
+interface Props {
+  titre?: string;
+  texte?: string;
+  /** Identifiant d'une offre, pour la présélectionner dans le formulaire de contact. */
+  sujet?: string;
+}
+const {
+  titre = 'Parlons de votre pratique.',
+  texte = 'Vos envies, vos disponibilités, vos éventuelles douleurs : écrivez quelques lignes, Elsa vous répond.',
+  sujet,
+} = Astro.props;
+const href = sujet ? `${contactHref}?sujet=${sujet}` : contactHref;
+---
+
+<section class="closing on-dark">
+  <h2>{titre}</h2>
+  <p class="lead">{texte}</p>
+  <a class="btn btn--paper" href={href}>Écrire à Elsa <Arrow /></a>
+</section>
+
+<style>
+  .closing {
+    display: grid;
+    justify-items: center;
+    gap: 1.5rem;
+    margin: 0 var(--gutter);
+    padding: clamp(4rem, 9vw, 8rem) var(--pad);
+    border-radius: var(--r-media);
+    background: var(--ink);
+    color: var(--on-ink);
+    text-align: center;
+  }
+
+  h2 {
+    max-width: 16ch;
+    font-size: var(--title-1);
+    line-height: 1;
+  }
+
+  p {
+    max-width: 44ch;
+    color: var(--on-ink-soft);
+  }
+
+  .btn {
+    margin-top: 0.75rem;
+  }
+</style>

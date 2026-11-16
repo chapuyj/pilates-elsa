@@ -1,0 +1,103 @@
+---
+// L'en-tête des pages intérieures : grand titre, phrase d'introduction, actions, et une photo facultative.
+import { Image } from 'astro:assets';
+
+interface Props {
+  titre: string;
+  intro?: string;
+  photo?: ImageMetadata;
+  photoAlt?: string;
+  /** Réglage du cadrage de la photo (valeur CSS object-position). */
+  cadrage?: string;
+}
+const { titre, intro, photo, photoAlt = '', cadrage = '50% 50%' } = Astro.props;
+const avecActions = Astro.slots.has('default');
+---
+
+<header class:list={['page-head', { 'with-photo': photo }]}>
+  <div class="wrap">
+    <div class="text">
+      <h1>{titre}</h1>
+      {intro && <p class="lead muted">{intro}</p>}
+      {
+        avecActions && (
+          <div class="actions">
+            <slot />
+          </div>
+        )
+      }
+    </div>
+    {
+      photo && (
+        <Image
+          src={photo}
+          alt={photoAlt}
+          widths={[480, 800, 1200]}
+          sizes="(min-width: 56rem) 42vw, 100vw"
+          loading="eager"
+          fetchpriority="high"
+          style={`object-position: ${cadrage}`}
+        />
+      )
+    }
+  </div>
+</header>
+
+<style>
+  .page-head {
+    padding-block: clamp(3rem, 7vw, 6rem) clamp(2.5rem, 5vw, 4.5rem);
+  }
+
+  .text {
+    display: grid;
+    justify-items: start;
+    gap: 1.5rem;
+  }
+
+  h1 {
+    max-width: 18ch;
+    font-size: var(--title-page);
+    line-height: 1.02;
+  }
+
+  p {
+    max-width: 52ch;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 1.75rem;
+    margin-top: 0.5rem;
+  }
+
+  .with-photo .wrap {
+    display: grid;
+    grid-template-columns: 6fr 5fr;
+    align-items: end;
+    gap: 2.5rem clamp(2rem, 6vw, 6rem);
+  }
+
+  .with-photo .text {
+    padding-bottom: clamp(0rem, 2vw, 2rem);
+  }
+
+  .page-head :global(img) {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    max-height: 42rem;
+    border-radius: var(--r-media);
+    object-fit: cover;
+  }
+
+  @media (max-width: 56rem) {
+    .with-photo .wrap {
+      grid-template-columns: 1fr;
+    }
+
+    .page-head :global(img) {
+      aspect-ratio: 4 / 3;
+    }
+  }
+</style>

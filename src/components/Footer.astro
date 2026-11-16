@@ -1,11 +1,13 @@
 ---
 import { getCollection } from 'astro:content';
 import { site } from '../config/site';
-import { navigation, contactHref } from '../config/navigation';
+import { contactHref } from '../config/navigation';
+import { liensDuMenu } from '../lib/navigation';
 import { offresPubliees } from '../lib/offres';
 import { dansLOrdre } from '../lib/listes';
 
 const offres = await offresPubliees();
+const navigation = await liensDuMenu();
 const lieux = dansLOrdre(await getCollection('lieux'));
 const annee = new Date().getFullYear();
 ---

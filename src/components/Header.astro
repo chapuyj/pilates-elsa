@@ -1,12 +1,14 @@
 ---
 import { site } from '../config/site';
-import { navigation, contactHref } from '../config/navigation';
+import { contactHref } from '../config/navigation';
+import { liensDuMenu } from '../lib/navigation';
 
 interface Props {
   /** Sur l'accueil, la barre de navigation est posée sur la grande photo. */
   overlay?: boolean;
 }
 const { overlay = false } = Astro.props;
+const navigation = await liensDuMenu();
 ---
 
 <header class:list={['site-header', { overlay }]}>

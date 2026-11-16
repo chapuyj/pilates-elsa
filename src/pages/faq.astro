@@ -1,0 +1,69 @@
+---
+// Toutes les questions fréquentes, regroupées par thème dans l'ordre de src/data/faq.yaml.
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import FaqList from '../components/FaqList.astro';
+import Closing from '../components/Closing.astro';
+import { site } from '../config/site';
+import { dansLOrdre } from '../lib/listes';
+import { donneesQuestions } from '../lib/jsonld';
+
+const questions = dansLOrdre(await getCollection('faq'));
+const themes = [...new Set(questions.map((item) => item.data.theme))];
+---
+
+<Base
+  title={`Questions fréquentes sur le Pilates | ${site.name}`}
+  description="Débuter le Pilates, tapis ou machines, respiration, grossesse, mal de dos, tenue : les réponses d'Elsa aux questions les plus fréquentes."
+  jsonLd={donneesQuestions(questions)}
+>
+  <PageHead titre="Questions fréquentes" intro="Ce que l'on demande le plus souvent avant un premier cours." />
+
+  <section class="themes">
+    <div class="wrap">
+      {
+        themes.map((theme) => (
+          <div class="theme">
+            <h2>{theme}</h2>
+            <FaqList questions={questions.filter((item) => item.data.theme === theme)} />
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <Closing titre="Une autre question ?" texte="Posez-la directement à Elsa, en quelques lignes." />
+</Base>
+
+<style>
+  .themes {
+    padding-bottom: var(--section);
+  }
+
+  .theme {
+    display: grid;
+    grid-template-columns: 5fr 7fr;
+    align-items: start;
+    gap: 1.5rem clamp(2rem, 6vw, 6rem);
+  }
+
+  .theme + .theme {
+    margin-top: clamp(3rem, 6vw, 5rem);
+  }
+
+  h2 {
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    padding-top: 1rem;
+  }
+
+  @media (max-width: 56rem) {
+    .theme {
+      grid-template-columns: 1fr;
+    }
+
+    h2 {
+      padding-top: 0;
+    }
+  }
+</style>
