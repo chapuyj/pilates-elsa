@@ -6,7 +6,7 @@ resume: Retrouvez Elsa sur Reformer, en petit groupe, dans deux studios du Val-d
 description: Elsa enseigne le Pilates Reformer en petit groupe chez LM Studio à Joinville-le-Pont et chez Reform'You à Saint-Maur-des-Fossés.
 action: studios
 photo: ../../assets/photos/offre-studio.jpg
-photoAlt: Une femme en appui latéral sur un Reformer, bras tendu vers le plafond, dans un studio aux arches claires.
+photoAlt: Des machines de Pilates en bois clair dans un studio lumineux, derrière le feuillage d'une plante.
 ---
 
 Elsa enseigne le Pilates sur Reformer dans deux studios du Val-de-Marne. Les cours se déroulent en petit groupe, chacun sur sa machine.

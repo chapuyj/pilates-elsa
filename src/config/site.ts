@@ -15,6 +15,8 @@ export const site = {
   locale: 'fr-FR',
   /** Tant que c'est `false`, le site demande aux moteurs de recherche de ne pas l'indexer. À passer à `true` à la mise en ligne. */
   indexable: false,
+  /** `true` tant que le site utilise des photos de banque d'images à la place des vraies photos d'Elsa. */
+  photosProvisoires: true,
 
   teacher: {
     firstName: 'Elsa',

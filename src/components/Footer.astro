@@ -58,8 +58,28 @@ const annee = new Date().getFullYear();
     </div>
   </div>
 
-  <p class="wordmark" aria-hidden="true">{site.name}</p>
+  <p class="wordmark" aria-hidden="true"><span>{site.name}</span></p>
 </footer>
+
+<script>
+  // Ajuste la taille du nom pour qu'il occupe exactement la largeur du pied de page, quel que soit le nom.
+  const marque = document.querySelector<HTMLElement>('.wordmark');
+  const texte = marque?.querySelector<HTMLElement>('span');
+
+  function ajuster() {
+    if (!marque || !texte) return;
+    const style = getComputedStyle(marque);
+    const largeur = marque.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+    marque.style.fontSize = '100px';
+    const mesure = texte.getBoundingClientRect().width;
+    marque.style.fontSize = mesure > 0 ? `${(100 * largeur) / mesure}px` : '';
+  }
+
+  if (marque) {
+    new ResizeObserver(ajuster).observe(marque);
+    document.fonts.ready.then(ajuster);
+  }
+</script>
 
 <style>
   .site-footer {
@@ -136,8 +156,9 @@ const annee = new Date().getFullYear();
   /* Le nom en très grand, coupé par le bas du bloc, comme une signature. */
   .wordmark {
     margin-top: clamp(1.5rem, 3vw, 3rem);
-    margin-bottom: -0.21em;
+    margin-bottom: -0.36em;
     padding-inline: var(--pad);
+    /* Taille de départ ; le script ci-dessus l'ajuste ensuite à la largeur exacte. */
     font-size: clamp(3rem, 16.5vw, 19rem);
     font-weight: 500;
     letter-spacing: -0.04em;
@@ -145,6 +166,11 @@ const annee = new Date().getFullYear();
     white-space: nowrap;
     color: var(--stone);
     user-select: none;
+  }
+
+  .wordmark span {
+    display: inline-block;
+    margin-right: -0.04em;
   }
 
   @media (max-width: 56rem) {

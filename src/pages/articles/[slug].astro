@@ -1,0 +1,103 @@
+---
+// La page d'un article. Le texte vient de src/content/articles/.
+import { render } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Arrow from '../../components/Arrow.astro';
+import Closing from '../../components/Closing.astro';
+import { site } from '../../config/site';
+import { articlesPublies, afficherDate } from '../../lib/articles';
+import { donneesArticle } from '../../lib/jsonld';
+
+export async function getStaticPaths() {
+  const articles = await articlesPublies();
+  return articles.map((article) => ({ params: { slug: article.id }, props: { article } }));
+}
+
+interface Props {
+  article: CollectionEntry<'articles'>;
+}
+const { article } = Astro.props;
+const { Content } = await render(article);
+const { titre, description, date, miseAJour, brouillon } = article.data;
+---
+
+<Base title={`${titre} | ${site.name}`} description={description} jsonLd={donneesArticle(article)} noindex={brouillon}>
+  <article>
+    <div class="wrap">
+      <header>
+        <a class="back" href="/articles/">Tous les articles</a>
+        <h1>{titre}</h1>
+        <p class="lead muted">{description}</p>
+        <p class="date muted">
+          <time datetime={date.toISOString().slice(0, 10)}>{afficherDate(date)}</time>
+          {miseAJour && <span>, mis à jour le {afficherDate(miseAJour)}</span>}
+          {brouillon && <span class="a-completer">brouillon, non publié</span>}
+        </p>
+      </header>
+
+      <div class="prose">
+        <Content />
+      </div>
+
+      <footer>
+        <a class="arrow-link" href="/articles/">Tous les articles <Arrow /></a>
+      </footer>
+    </div>
+  </article>
+
+  <Closing />
+</Base>
+
+<style>
+  article {
+    padding-block: clamp(3rem, 7vw, 6rem) var(--section);
+  }
+
+  /* Une colonne de lecture étroite, centrée dans la page. */
+  .wrap {
+    display: grid;
+    grid-template-columns: minmax(0, 68ch);
+    justify-content: center;
+    gap: clamp(2.5rem, 5vw, 4rem);
+  }
+
+  header {
+    display: grid;
+    justify-items: start;
+    gap: 1.25rem;
+  }
+
+  .back {
+    font-size: var(--text-small);
+    color: var(--ink-soft);
+    text-underline-offset: 0.3em;
+  }
+
+  .back:hover {
+    color: var(--ink);
+  }
+
+  h1 {
+    font-size: var(--title-2);
+    line-height: 1.04;
+  }
+
+  .date {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.25rem 0.5rem;
+    font-size: var(--text-small);
+  }
+
+  .prose {
+    font-size: 1.125rem;
+    line-height: 1.7;
+  }
+
+  footer {
+    padding-top: 2rem;
+    border-top: 1px solid var(--stone);
+  }
+</style>

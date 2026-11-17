@@ -1,0 +1,58 @@
+---
+// Mentions légales. Les informations de l'éditeur viennent de src/config/site.ts (bloc « legal »).
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import { site } from '../config/site';
+
+const { editeur, statut, siret, adresse } = site.legal;
+const { email } = site.contact;
+---
+
+<Base title={`Mentions légales | ${site.name}`} description={`Les mentions légales du site ${site.name}.`}>
+  <PageHead titre="Mentions légales" />
+
+  <section class="legal">
+    <div class="wrap">
+      <div class="prose">
+        <h2>Éditeur du site</h2>
+        <p>
+          Ce site est édité par {editeur ?? <span class="a-completer">nom de l'éditeur à compléter</span>},
+          {statut ?? <span class="a-completer">statut à compléter</span>}.
+        </p>
+        <ul>
+          <li>SIRET : {siret ?? <span class="a-completer">à compléter</span>}</li>
+          <li>Adresse : {adresse ?? <span class="a-completer">à compléter</span>}</li>
+          <li>
+            Contact : {email ? <a href={`mailto:${email}`}>{email}</a> : <a href="/contact/">page de contact</a>}
+          </li>
+          <li>Responsable de la publication : {editeur ?? <span class="a-completer">à compléter</span>}</li>
+        </ul>
+
+        <h2>Hébergement</h2>
+        <p>
+          Le site est hébergé par Cloudflare, Inc., 101 Townsend Street, San Francisco, CA 94107, États-Unis
+          (<a href="https://www.cloudflare.com" rel="noopener">cloudflare.com</a>).
+        </p>
+
+        <h2>Contenus et photographies</h2>
+        <p>
+          Les textes de ce site appartiennent à leur auteure. Toute reproduction, même partielle, demande son accord.
+          Les photographies sont utilisées avec l'autorisation de leurs auteurs ou sous une licence qui le permet.
+        </p>
+
+        <h2>Activité physique et santé</h2>
+        <p>
+          Les informations publiées sur ce site sont générales. Elles ne remplacent pas l'avis d'un médecin. En cas de
+          douleur, de pathologie ou de grossesse, demandez un avis médical avant de commencer ou de reprendre une
+          activité physique.
+        </p>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .legal {
+    padding-bottom: var(--section);
+  }
+</style>

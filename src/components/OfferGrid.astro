@@ -3,6 +3,7 @@
 import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import Arrow from './Arrow.astro';
+import PhotoNote from './PhotoNote.astro';
 
 interface Props {
   offres: CollectionEntry<'offres'>[];
@@ -17,11 +18,13 @@ const colonnes = Math.min(offres.length, 4);
       <li>
         <a class="offer" href={`/${offre.id}/`}>
           <div class="offer-photo">
+            <PhotoNote />
             <Image
               src={offre.data.photo}
               alt={offre.data.photoAlt}
               widths={[400, 640, 900]}
               sizes="(min-width: 70rem) 24vw, (min-width: 38rem) 48vw, 100vw"
+              style={`object-position: ${offre.data.photoCadrage}`}
             />
             <span class="offer-badge"><Arrow /></span>
           </div>

@@ -1,5 +1,5 @@
 ---
-import { Image } from 'astro:assets';
+import { Image, getImage } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import Arrow from '../components/Arrow.astro';
@@ -7,12 +7,14 @@ import OfferGrid from '../components/OfferGrid.astro';
 import StudioList from '../components/StudioList.astro';
 import FaqList from '../components/FaqList.astro';
 import Closing from '../components/Closing.astro';
+import PhotoNote from '../components/PhotoNote.astro';
 import { site } from '../config/site';
 import { contactHref } from '../config/navigation';
 import { offresPubliees } from '../lib/offres';
 import { dansLOrdre } from '../lib/listes';
 import { donneesActivite } from '../lib/jsonld';
 import photoAccueil from '../assets/photos/accueil-reformer.jpg';
+import photoAccueilMobile from '../assets/photos/accueil-reformer-mobile.jpg';
 import photoDifference from '../assets/photos/posture-reformer.jpg';
 
 const offres = await offresPubliees();
@@ -22,6 +24,9 @@ const nombres = ['', 'Une', 'Deux', 'Trois', 'Quatre', 'Cinq', 'Six'];
 const titreOffres = `${nombres[offres.length] ?? 'Plusieurs'} façons de pratiquer`;
 
 const questions = dansLOrdre(await getCollection('faq')).slice(0, 4);
+
+// Sur mobile, la grande photo est remplacée par une version verticale, mieux cadrée pour un écran étroit.
+const accueilMobile = await getImage({ src: photoAccueilMobile, widths: [480, 780, 1170], format: 'webp' });
 
 // Les trois raisons de choisir Elsa. À faire relire par Elsa.
 const differences = [
@@ -49,15 +54,19 @@ const differences = [
   overlay
 >
   <section class="hero on-dark">
-    <Image
-      class="hero-photo"
-      src={photoAccueil}
-      alt="Une femme en appui sur un Reformer, dans un studio de Pilates aux tons clairs."
-      widths={[640, 960, 1280, 1680, 2400]}
-      sizes="100vw"
-      loading="eager"
-      fetchpriority="high"
-    />
+    <picture>
+      <source media="(max-width: 38rem)" srcset={accueilMobile.srcSet.attribute} sizes="100vw" type="image/webp" />
+      <Image
+        class="hero-photo"
+        src={photoAccueil}
+        alt="Une femme en plein exercice sur un Reformer, dans un studio de Pilates lumineux aux tons clairs."
+        widths={[640, 960, 1280, 1680, 2400]}
+        sizes="100vw"
+        loading="eager"
+        fetchpriority="high"
+      />
+    </picture>
+    <div class="hero-note"><PhotoNote /></div>
     <div class="hero-body">
       <h1>
         Le Pilates, à votre rythme.
@@ -65,7 +74,7 @@ const differences = [
       </h1>
       <div class="hero-actions">
         <a class="btn btn--paper" href={contactHref}>Écrire à Elsa <Arrow /></a>
-        <a class="arrow-link" href="#cours">Voir les cours</a>
+        <a class="arrow-link" href="#cours">Voir les cours <Arrow /></a>
       </div>
     </div>
   </section>
@@ -89,7 +98,13 @@ const differences = [
       {
         offreEnAvant && (
           <a class="featured" href={`/${offreEnAvant.id}/`}>
-            <Image src={offreEnAvant.data.photo} alt={offreEnAvant.data.photoAlt} widths={[640, 960, 1400]} sizes="(min-width: 56rem) 58vw, 100vw" />
+            <Image
+              src={offreEnAvant.data.photo}
+              alt={offreEnAvant.data.photoAlt}
+              widths={[640, 960, 1400]}
+              sizes="(min-width: 56rem) 58vw, 100vw"
+              style={`object-position: ${offreEnAvant.data.photoCadrage}`}
+            />
             <div>
               <h3>{offreEnAvant.data.titreCourt}</h3>
               <p class="lead muted">{offreEnAvant.data.resume}</p>
@@ -105,13 +120,15 @@ const differences = [
 
   <section class="section difference">
     <div class="wrap">
-      <Image
-        class="difference-photo"
-        src={photoDifference}
-        alt="Une femme allongée sur un Reformer, jambes tendues vers le plafond, pieds dans les sangles."
-        widths={[480, 800, 1200]}
-        sizes="(min-width: 56rem) 40vw, 100vw"
-      />
+      <div class="difference-photo">
+        <PhotoNote />
+        <Image
+          src={photoDifference}
+          alt="Une femme allongée sur un Reformer, jambes tendues vers le plafond, pieds dans les sangles."
+          widths={[480, 800, 1200]}
+          sizes="(min-width: 56rem) 40vw, 100vw"
+        />
+      </div>
       <div class="difference-text">
         <h2>Ce qui fait la différence</h2>
         <ul class="rows">
@@ -166,7 +183,7 @@ const differences = [
     margin: var(--gutter);
     border-radius: var(--r-media);
     overflow: hidden;
-    background: #5b4c3f;
+    background: var(--ink-hover);
     color: var(--on-ink);
   }
 
@@ -180,15 +197,39 @@ const differences = [
     object-position: 60% 52%;
   }
 
-  /* Voile sombre en bas à gauche, pour que le titre reste lisible sur la photo. */
+  /* À l'ouverture de la page, la photo se pose doucement. Sans mouvement, elle est simplement là. */
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-photo {
+      animation: poser 1.6s var(--ease-out) backwards;
+    }
+  }
+
+  @keyframes poser {
+    from {
+      transform: scale(1.045);
+    }
+    to {
+      transform: scale(1);
+    }
+  }
+
+  /* Voile sombre limité au coin du texte, pour que le reste de la photo garde sa lumière. */
   .hero::before {
     content: '';
     position: absolute;
     inset: 0;
     z-index: -1;
-    background:
-      linear-gradient(to top, rgb(30 23 17 / 0.62) 0%, rgb(30 23 17 / 0) 55%),
-      linear-gradient(75deg, rgb(30 23 17 / 0.72) 0%, rgb(30 23 17 / 0.38) 38%, rgb(30 23 17 / 0) 66%);
+    background: radial-gradient(
+      ellipse 78% 112% at 0% 100%,
+      rgb(30 23 17 / 0.74) 0%,
+      rgb(30 23 17 / 0.52) 38%,
+      rgb(30 23 17 / 0) 100%
+    );
+  }
+
+  /* Le repère « photo provisoire » se place en bas à droite, loin du menu et du titre. */
+  .hero-note :global(.photo-note) {
+    inset: auto 1rem 1rem auto;
   }
 
   .hero-body {
@@ -199,6 +240,7 @@ const differences = [
     max-width: 14ch;
     font-size: var(--title-1);
     line-height: 1;
+    text-shadow: 0 1px 28px rgb(30 23 17 / 0.4);
   }
 
   h1 span {
@@ -283,9 +325,14 @@ const differences = [
   }
 
   .difference-photo {
+    position: relative;
+    border-radius: var(--r-media);
+    overflow: hidden;
+  }
+
+  .difference-photo :global(img) {
     width: 100%;
     aspect-ratio: 4 / 5;
-    border-radius: var(--r-media);
     object-fit: cover;
   }
 
@@ -340,19 +387,58 @@ const differences = [
       padding: 0 1.5rem 2rem;
     }
 
-    .difference-photo {
+    .difference-photo :global(img) {
       aspect-ratio: 4 / 3;
       object-position: 50% 70%;
     }
   }
 
+  /* Sur mobile, la photo (version verticale) garde toute sa lumière : le texte passe dessous, sur fond blanc. */
   @media (max-width: 38rem) {
     .hero {
-      min-height: 86svh;
+      display: block;
+      min-height: 0;
+      border-radius: 0;
+      overflow: visible;
+      background: none;
+      color: var(--ink);
+    }
+
+    .hero::before {
+      display: none;
     }
 
     .hero-photo {
-      object-position: 30% 50%;
+      position: static;
+      height: 60svh;
+      min-height: 22rem;
+      border-radius: var(--r-media);
+      object-position: 62% 45%;
+    }
+
+    .hero-body {
+      padding: 1.75rem calc(var(--pad) - var(--gutter)) 0.5rem;
+    }
+
+    h1 {
+      text-shadow: none;
+    }
+
+    h1 span {
+      color: var(--ink-soft);
+    }
+
+    .hero .btn--paper {
+      background: var(--ink);
+      color: var(--on-ink);
+    }
+
+    .hero :global(:focus-visible) {
+      outline-color: var(--ink);
+    }
+
+    .hero-note :global(.photo-note) {
+      inset: 5.5rem auto auto 1rem;
     }
   }
 </style>

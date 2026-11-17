@@ -1,0 +1,375 @@
+---
+// La page de contact. Les moyens de contact viennent de src/config/site.ts.
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import Arrow from '../components/Arrow.astro';
+import StudioList from '../components/StudioList.astro';
+import { site } from '../config/site';
+import { offresPubliees } from '../lib/offres';
+import { dansLOrdre } from '../lib/listes';
+
+const { email, instagram, whatsappUrl, formEndpoint } = site.contact;
+const offres = (await offresPubliees()).filter((offre) => offre.data.action === 'contact');
+const lieux = dansLOrdre(await getCollection('lieux'));
+
+// Le formulaire n'est publié que s'il est branché. En développement, on l'affiche quand même pour le voir.
+const formulaireVisible = Boolean(formEndpoint) || import.meta.env.DEV;
+const canaux: { nom: string; href: string; texte: string }[] = [];
+if (whatsappUrl) canaux.push({ nom: 'WhatsApp', href: whatsappUrl, texte: 'Ouvrir une conversation' });
+if (instagram) canaux.push({ nom: 'Instagram', href: `https://www.instagram.com/${instagram}/`, texte: `@${instagram}` });
+if (email) canaux.push({ nom: 'E-mail', href: `mailto:${email}`, texte: email });
+
+// Tant qu'aucun moyen de contact n'est configuré, la page le dit et met en avant ce qui fonctionne : les studios.
+const sansContact = !formulaireVisible && canaux.length === 0;
+const intro = sansContact
+  ? "Le formulaire de contact arrive très bientôt. En attendant, les cours en studio se réservent directement auprès des studios."
+  : "Dites-lui en quelques lignes ce que vous cherchez : votre niveau, vos disponibilités, vos éventuelles douleurs. Elle vous répond.";
+---
+
+<Base
+  title={`Écrire à Elsa | ${site.name}`}
+  description="Contactez Elsa pour un cours de Pilates particulier, en visio ou en entreprise, dans le Val-de-Marne."
+>
+  <PageHead titre="Écrire à Elsa" intro={intro} />
+
+  {
+    sansContact && (
+      <section class="studios">
+        <div class="wrap">
+          <h2>Réserver un cours en studio</h2>
+          <StudioList />
+        </div>
+      </section>
+    )
+  }
+
+  {
+    !sansContact && (
+  <section class="contact">
+    <div class="wrap">
+      <div class="main">
+        {
+          formulaireVisible && (
+            <form id="formulaire" action={formEndpoint ?? '#'} method="post" novalidate>
+              {!formEndpoint && (
+                <p class="a-completer" role="note">
+                  Formulaire pas encore branché : renseigner « formEndpoint » dans src/config/site.ts. Cette version n'est visible qu'en développement.
+                </p>
+              )}
+
+              <div class="field">
+                <label for="nom">Votre nom</label>
+                <input id="nom" name="nom" type="text" autocomplete="name" required />
+                <p class="error" id="erreur-nom" hidden>Indiquez votre nom.</p>
+              </div>
+
+              <div class="field">
+                <label for="email">Votre adresse e-mail</label>
+                <input id="email" name="email" type="email" autocomplete="email" inputmode="email" required />
+                <p class="error" id="erreur-email" hidden>Indiquez une adresse e-mail valide, pour qu'Elsa puisse vous répondre.</p>
+              </div>
+
+              <div class="field">
+                <label for="sujet">Ce qui vous intéresse</label>
+                <select id="sujet" name="sujet">
+                  <option value="">Je ne sais pas encore</option>
+                  {offres.map((offre) => <option value={offre.id}>{offre.data.titreCourt}</option>)}
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="message">Votre message</label>
+                <textarea id="message" name="message" rows="6" required />
+                <p class="error" id="erreur-message" hidden>Écrivez quelques mots à Elsa.</p>
+              </div>
+
+              {/* Champ piège pour les robots : invisible et à laisser vide. */}
+              <div class="trap" aria-hidden="true">
+                <label for="site-web">Ne pas remplir ce champ</label>
+                <input id="site-web" name="site-web" type="text" tabindex="-1" autocomplete="off" />
+              </div>
+
+              <div class="submit">
+                <button class="btn btn--ink" type="submit" disabled={!formEndpoint}>
+                  Envoyer <Arrow />
+                </button>
+                <p class="muted small">
+                  Vos informations servent uniquement à vous répondre. <a href="/confidentialite/">En savoir plus</a>
+                </p>
+              </div>
+
+              <p class="status" id="etat" role="status" aria-live="polite"></p>
+            </form>
+          )
+        }
+
+      </div>
+
+      <aside>
+        {
+          canaux.length > 0 && (
+            <div class="block">
+              <h2>{formulaireVisible ? 'Ou directement' : 'Pour lui écrire'}</h2>
+              <ul class="rows">
+                {canaux.map((canal) => (
+                  <li>
+                    <span class="muted">{canal.nom}</span>
+                    <a class="arrow-link" href={canal.href} rel="noopener">
+                      {canal.texte} <Arrow out />
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )
+        }
+
+        <div class="block">
+          <h2>Pour un cours en studio</h2>
+          <p class="muted">La réservation se fait auprès du studio, sur son planning.</p>
+          <ul class="rows">
+            {
+              lieux.map((lieu) => (
+                <li>
+                  <span>
+                    {lieu.data.nom}
+                    <small class="muted">{lieu.data.ville}</small>
+                  </span>
+                  <a class="arrow-link" href={lieu.data.planning} rel="noopener">
+                    Planning <Arrow out />
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </section>
+    )
+  }
+</Base>
+
+<script>
+  // Envoi du formulaire sans quitter la page, avec des messages clairs en cas de problème.
+  const formulaire = document.querySelector<HTMLFormElement>('#formulaire');
+  const etat = document.querySelector<HTMLElement>('#etat');
+
+  function verifier(champ: HTMLInputElement | HTMLTextAreaElement): boolean {
+    const erreur = document.querySelector<HTMLElement>(`#erreur-${champ.id}`);
+    const valide = champ.checkValidity();
+    champ.setAttribute('aria-invalid', String(!valide));
+    if (erreur) {
+      erreur.hidden = valide;
+      if (valide) champ.removeAttribute('aria-describedby');
+      else champ.setAttribute('aria-describedby', erreur.id);
+    }
+    return valide;
+  }
+
+  if (formulaire && etat) {
+    const champs = [...formulaire.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('input[required], textarea[required]')];
+    const bouton = formulaire.querySelector<HTMLButtonElement>('button[type="submit"]');
+
+    // Présélectionne l'offre quand on arrive depuis une page d'offre (…/contact/?sujet=…).
+    const sujet = new URLSearchParams(location.search).get('sujet');
+    const choix = formulaire.querySelector<HTMLSelectElement>('#sujet');
+    if (sujet && choix && [...choix.options].some((option) => option.value === sujet)) choix.value = sujet;
+
+    champs.forEach((champ) => champ.addEventListener('blur', () => verifier(champ)));
+
+    formulaire.addEventListener('submit', async (evenement) => {
+      evenement.preventDefault();
+      const invalides = champs.filter((champ) => !verifier(champ));
+      if (invalides.length > 0) {
+        invalides[0]?.focus();
+        return;
+      }
+      if (!bouton || bouton.disabled) return;
+
+      bouton.disabled = true;
+      etat.dataset.type = 'attente';
+      etat.textContent = 'Envoi en cours…';
+      try {
+        const reponse = await fetch(formulaire.action, {
+          method: 'POST',
+          headers: { Accept: 'application/json' },
+          body: new FormData(formulaire),
+        });
+        if (!reponse.ok) throw new Error(String(reponse.status));
+        formulaire.reset();
+        etat.dataset.type = 'succes';
+        etat.textContent = 'Message envoyé. Elsa vous répond dès que possible.';
+      } catch {
+        etat.dataset.type = 'erreur';
+        etat.textContent = "Le message n'est pas parti. Vérifiez votre connexion, puis réessayez dans un instant.";
+      } finally {
+        bouton.disabled = false;
+      }
+    });
+  }
+</script>
+
+<style>
+  .contact,
+  .studios {
+    padding-bottom: var(--section);
+  }
+
+  .studios h2 {
+    margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+    font-size: var(--title-sub);
+  }
+
+  .contact .wrap {
+    display: grid;
+    grid-template-columns: 7fr 5fr;
+    align-items: start;
+    gap: 3rem clamp(2rem, 7vw, 7rem);
+  }
+
+  form {
+    display: grid;
+    gap: 1.5rem;
+    max-width: 40rem;
+  }
+
+  .field {
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  label {
+    font-weight: 500;
+  }
+
+  input,
+  select,
+  textarea {
+    width: 100%;
+    padding: 0.9rem 1rem;
+    border: 1px solid var(--stone);
+    border-radius: var(--r-card);
+    background: var(--paper);
+    color: var(--ink);
+    font: inherit;
+    transition: border-color 0.25s var(--ease-out);
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 9rem;
+  }
+
+  input:hover,
+  select:hover,
+  textarea:hover {
+    border-color: var(--wood);
+  }
+
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 1px;
+    border-color: var(--ink);
+    border-radius: var(--r-card);
+  }
+
+  [aria-invalid='true'] {
+    border-color: var(--error);
+  }
+
+  .error {
+    color: var(--error);
+    font-size: var(--text-small);
+  }
+
+  .trap {
+    position: absolute;
+    left: -100vw;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .submit {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 1.5rem;
+    margin-top: 0.5rem;
+  }
+
+  .btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  .small,
+  small {
+    font-size: var(--text-small);
+  }
+
+  .status:empty {
+    display: none;
+  }
+
+  .status {
+    padding: 1rem 1.25rem;
+    border-radius: var(--r-card);
+    background: var(--linen);
+  }
+
+  .status[data-type='erreur'] {
+    color: var(--error);
+    font-weight: 500;
+  }
+
+  .status[data-type='succes'] {
+    font-weight: 500;
+  }
+
+  aside {
+    display: grid;
+    gap: 2.5rem;
+    padding: clamp(1.5rem, 2.6vw, 2.25rem);
+    border-radius: var(--r-media);
+    background: var(--linen);
+  }
+
+  .block {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .block h2 {
+    font-size: var(--title-3);
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    line-height: 1.2;
+  }
+
+  .block .rows {
+    margin-top: 0.5rem;
+  }
+
+  .block li {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1.5rem;
+    padding-block: 1.1rem;
+  }
+
+  .block li small {
+    display: block;
+  }
+
+  @media (max-width: 56rem) {
+    .contact .wrap {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

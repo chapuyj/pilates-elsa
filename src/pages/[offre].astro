@@ -32,7 +32,13 @@ const enStudio = offre.data.action === 'studios';
 ---
 
 <Base title={`${offre.data.titre} | ${site.name}`} description={offre.data.description} jsonLd={donneesOffre(offre)}>
-  <PageHead titre={offre.data.titre} intro={offre.data.resume} photo={offre.data.photo} photoAlt={offre.data.photoAlt}>
+  <PageHead
+    titre={offre.data.titre}
+    intro={offre.data.resume}
+    photo={offre.data.photo}
+    photoAlt={offre.data.photoAlt}
+    cadrage={offre.data.photoCadrage}
+  >
     {
       enStudio ? (
         <a class="btn btn--ink" href="#studios">Voir les studios <Arrow /></a>
@@ -123,7 +129,7 @@ const enStudio = offre.data.action === 'studios';
   }
 
   .prices h2 {
-    font-size: clamp(1.625rem, 2.6vw, 2.125rem);
+    font-size: var(--title-sub);
   }
 
   .prices ul {

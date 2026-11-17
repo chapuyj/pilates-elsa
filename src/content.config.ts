@@ -30,6 +30,11 @@ const offres = defineCollection({
     photo: image(),
     /** Ce que montre la photo, pour les personnes qui ne la voient pas. */
     photoAlt: z.string(),
+    /**
+     * Point de la photo à garder visible quand elle est recadrée : « horizontal vertical », en pourcentages.
+     * « 50% 50% » = le centre ; « 50% 85% » = plutôt le bas de l'image.
+     */
+    photoCadrage: z.string().default('50% 50%'),
     /** Offre mise en avant : affichée en grand, avant les autres. Une seule à la fois. */
     enAvant: z.boolean().default(false),
     /** Un brouillon n'est pas publié (visible seulement pendant le développement). */
@@ -106,4 +111,17 @@ const temoignages = defineCollection({
   }),
 });
 
-export const collections = { offres, articles, faq, tarifs, lieux, temoignages };
+/** Les pages de texte libre (à propos) : un fichier par page dans src/content/pages/. */
+const pages = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/pages' }),
+  schema: z.object({
+    /** Titre principal de la page (H1). */
+    titre: z.string(),
+    /** Phrase d'introduction, sous le titre. */
+    intro: z.string(),
+    /** Description pour Google (150 caractères environ). */
+    description: z.string(),
+  }),
+});
+
+export const collections = { offres, articles, faq, tarifs, lieux, temoignages, pages };

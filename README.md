@@ -68,3 +68,55 @@ Ce qui est améliorable :
 Un design que Elsa a apprécié (même s'il est trop orienté pour un studio) :
 - https://dribbble.com/shots/27371290-Lefore-Elegant-Fitness-Gym-Pilates-Equipment-Ecommerce-Website
 - https://cdn.dribbble.com/userupload/47711222/file/139957b3874efb04529033728891c797.jpeg?resize=640x2894&vertical=center
+## Faire vivre le site
+
+### Lancer le site sur son ordinateur
+
+```bash
+mise run dev
+```
+
+Le site s'ouvre sur `http://localhost:4321`. Les brouillons y sont visibles, signalés en jaune. Pour voir le site exactement tel qu'il sera publié : `mise run build`, puis `mise run preview`.
+
+### Où modifier quoi
+
+Chaque information n'existe qu'à un seul endroit.
+
+| Pour changer… | Fichier |
+|---|---|
+| Le nom, le domaine, l'e-mail, Instagram, WhatsApp, les mentions légales | `src/config/site.ts` |
+| Les liens du menu | `src/config/navigation.ts` |
+| Le texte d'une offre, sa photo, son titre | `src/content/offres/` (un fichier par offre) |
+| Un prix | `src/data/tarifs.yaml` |
+| Une question fréquente | `src/data/faq.yaml` |
+| L'adresse ou le planning d'un studio | `src/data/lieux.yaml` |
+| Un avis d'élève | `src/data/temoignages.yaml` |
+| La page « À propos » | `src/content/pages/a-propos.md` |
+| Un article | `src/content/articles/` (un fichier par article) |
+| Les couleurs, la typographie, les espacements | `src/styles/global.css` |
+
+Les textes de la page d'accueil (titre, phrase d'intention, « Ce qui fait la différence ») sont dans `src/pages/index.astro`.
+
+### Gestes courants
+
+- **Fixer un prix** : dans `src/data/tarifs.yaml`, écrire le montant après `prix:` (par exemple `prix: 80`). Tant que la ligne est vide, le site affiche « Sur demande ».
+- **Publier une offre ou un article en brouillon** : passer `brouillon: true` à `brouillon: false` en haut du fichier.
+- **Mettre une offre en avant** sur l'accueil : `enAvant: true` dans son fichier (une seule à la fois).
+- **Ajouter un article** : copier un fichier de `src/content/articles/`, changer son nom (il devient l'adresse de l'article), son titre, sa date et son texte.
+- **Remplacer une photo** : déposer la nouvelle image dans `src/assets/photos/`, puis indiquer son nom après `photo:` dans le fichier de l'offre. Mettre à jour `photoAlt` (ce que montre la photo) et `src/assets/photos/CREDITS.md`. Quand toutes les photos provisoires sont remplacées, passer `photosProvisoires` à `false` dans `src/config/site.ts`.
+- **Recadrer une photo d'offre** : si le sujet est coupé dans les vignettes, régler `photoCadrage` dans le fichier de l'offre (par exemple `photoCadrage: 50% 80%` pour garder plutôt le bas de l'image).
+- **Photo d'accueil** : deux versions, `accueil-reformer.jpg` (ordinateur, format horizontal) et `accueil-reformer-mobile.jpg` (téléphone, format vertical). Les remplacer toutes les deux.
+- **Ajouter un avis** : suivre l'exemple en haut de `src/data/temoignages.yaml`. Uniquement de vrais avis, avec l'accord de la personne.
+
+Le site s'occupe seul du redimensionnement des photos, du plan du site, du flux RSS et des données lues par Google.
+
+### Avant la mise en ligne
+
+`mise run build` liste ce qu'il reste à renseigner dans `src/config/site.ts`. Quand tout y est :
+
+1. Renseigner l'adresse définitive (`url`), les moyens de contact et le bloc `legal`.
+2. Brancher le formulaire de contact (`formEndpoint`).
+3. Faire relire par Elsa les pages « À propos », « Mentions légales » et « Confidentialité ».
+4. Passer `indexable` à `true` : le site devient visible par les moteurs de recherche. À partir de là, la construction échoue si une information obligatoire manque.
+
+Les décisions de fond sont dans `PRODUCT.md`, les questions à poser à Elsa dans `docs/questions-elsa.md`.

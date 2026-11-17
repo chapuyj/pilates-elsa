@@ -1,0 +1,32 @@
+---
+// La page affichée quand une adresse n'existe pas.
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import Arrow from '../components/Arrow.astro';
+import OfferGrid from '../components/OfferGrid.astro';
+import { site } from '../config/site';
+import { offresPubliees } from '../lib/offres';
+
+const offres = await offresPubliees();
+---
+
+<Base title={`Page introuvable | ${site.name}`} description="Cette page n'existe pas ou a été déplacée." noindex>
+  <PageHead titre="Cette page n'existe pas." intro="L'adresse a peut-être changé. Voici de quoi retrouver votre chemin.">
+    <a class="btn btn--ink" href="/">Revenir à l'accueil <Arrow /></a>
+  </PageHead>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Les cours</h2>
+      </div>
+      <OfferGrid offres={offres} />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .section {
+    padding-top: 0;
+  }
+</style>

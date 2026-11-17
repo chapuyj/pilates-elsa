@@ -1,0 +1,76 @@
+---
+// La page « À propos ». Le texte vient de src/content/pages/a-propos.md.
+import { getEntry, render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import Arrow from '../components/Arrow.astro';
+import OfferGrid from '../components/OfferGrid.astro';
+import StudioList from '../components/StudioList.astro';
+import Closing from '../components/Closing.astro';
+import { site } from '../config/site';
+import { contactHref } from '../config/navigation';
+import { offresPubliees } from '../lib/offres';
+import photo from '../assets/photos/posture-reformer.jpg';
+
+const page = await getEntry('pages', 'a-propos');
+if (!page) throw new Error('Le fichier src/content/pages/a-propos.md est introuvable.');
+const { Content } = await render(page);
+const offres = await offresPubliees();
+---
+
+<Base title={`${page.data.titre} | ${site.name}`} description={page.data.description}>
+  <PageHead
+    titre={page.data.titre}
+    intro={page.data.intro}
+    photo={photo}
+    photoAlt="Une femme allongée sur un Reformer, jambes tendues vers le plafond, pieds dans les sangles."
+    cadrage="40% 30%"
+  >
+    <a class="btn btn--ink" href={contactHref}>Écrire à Elsa <Arrow /></a>
+  </PageHead>
+
+  <section class="story">
+    <div class="wrap">
+      <div class="prose">
+        <Content />
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Où elle enseigne</h2>
+        <p class="lead muted">En studio sur Reformer, et aussi chez vous, en visio ou dans votre entreprise.</p>
+      </div>
+      <StudioList />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Pratiquer avec Elsa</h2>
+      </div>
+      <OfferGrid offres={offres} />
+    </div>
+  </section>
+
+  <Closing />
+</Base>
+
+<style>
+  .story {
+    padding-block: clamp(1rem, 3vw, 2.5rem) var(--section);
+  }
+
+  /* Le texte est décalé vers la droite, sous la photo de l'en-tête. */
+  .story .wrap {
+    display: grid;
+    grid-template-columns: 1fr minmax(0, 68ch) 1fr;
+  }
+
+  .story .prose {
+    grid-column: 2;
+  }
+</style>

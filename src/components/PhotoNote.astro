@@ -1,0 +1,22 @@
+---
+// Petit repère affiché sur les photos provisoires, uniquement pendant le développement.
+// Il disparaît quand `photosProvisoires` passe à `false` dans src/config/site.ts.
+import { site } from '../config/site';
+
+const visible = import.meta.env.DEV && site.photosProvisoires;
+---
+
+{visible && <span class="a-completer photo-note">photo provisoire</span>}
+
+<style>
+  .photo-note {
+    position: absolute;
+    left: 0.75rem;
+    top: 0.75rem;
+    z-index: 2;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    letter-spacing: 0;
+    color: var(--ink);
+  }
+</style>

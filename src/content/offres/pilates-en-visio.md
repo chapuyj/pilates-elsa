@@ -6,7 +6,7 @@ resume: Le même suivi, depuis votre salon. Il suffit d'un tapis et d'une connex
 description: Cours de Pilates en visio avec Elsa, où que vous soyez. Une séance guidée et corrigée en direct, avec un simple tapis.
 action: contact
 photo: ../../assets/photos/offre-visio.jpg
-photoAlt: Une personne s'étire sur son tapis, face à un ordinateur portable posé au sol, dans un salon.
+photoAlt: Une femme assise en tailleur sur son tapis, face à un ordinateur portable, dans un salon lumineux.
 ---
 
 Un cours en visio est un vrai cours : Elsa vous voit, vous guide et vous corrige en direct. Vous pratiquez chez vous, sans temps de trajet, où que vous habitiez.

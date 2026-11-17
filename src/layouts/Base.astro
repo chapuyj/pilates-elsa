@@ -30,7 +30,7 @@ const imagePartage = new URL(partage.src, Astro.site);
 ---
 
 <!doctype html>
-<html lang="fr">
+<html lang="fr" data-dev={import.meta.env.DEV ? "" : undefined}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />

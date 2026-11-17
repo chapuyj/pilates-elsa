@@ -1,0 +1,105 @@
+---
+// La liste des articles, du plus récent au plus ancien. Un fichier par article dans src/content/articles/.
+import Base from '../../layouts/Base.astro';
+import PageHead from '../../components/PageHead.astro';
+import Arrow from '../../components/Arrow.astro';
+import Closing from '../../components/Closing.astro';
+import { site } from '../../config/site';
+import { articlesPublies, afficherDate } from '../../lib/articles';
+
+const articles = await articlesPublies();
+---
+
+<Base
+  title={`Articles sur le Pilates | ${site.name}`}
+  description="Les articles d'Elsa pour mieux comprendre le Pilates : la méthode, la respiration, le tapis et les machines."
+  noindex={articles.length === 0}
+>
+  <PageHead titre="Articles" intro="Pour mieux comprendre le Pilates : la méthode, la respiration, le tapis et les machines." />
+
+  <section class="list">
+    <div class="wrap">
+      {
+        articles.length === 0 ? (
+          <p class="lead">Les premiers articles sont en cours d'écriture.</p>
+        ) : (
+          <ul class="rows">
+            {articles.map((article) => (
+              <li>
+                <a href={`/articles/${article.id}/`}>
+                  <time class="muted" datetime={article.data.date.toISOString().slice(0, 10)}>
+                    {afficherDate(article.data.date)}
+                    {article.data.brouillon && <span class="a-completer">brouillon</span>}
+                  </time>
+                  <span class="text">
+                    <h2>{article.data.titre}</h2>
+                    <span class="muted">{article.data.description}</span>
+                  </span>
+                  <Arrow />
+                </a>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </div>
+  </section>
+
+  <Closing />
+</Base>
+
+<style>
+  .list {
+    padding-bottom: var(--section);
+  }
+
+  .rows li {
+    padding-block: 0;
+  }
+
+  a {
+    display: grid;
+    grid-template-columns: 12rem 1fr auto;
+    align-items: baseline;
+    gap: 0.75rem 2rem;
+    padding-block: clamp(1.5rem, 3vw, 2.25rem);
+    text-decoration: none;
+  }
+
+  time {
+    display: grid;
+    justify-items: start;
+    gap: 0.4rem;
+    font-size: var(--text-small);
+  }
+
+  .text {
+    display: grid;
+    gap: 0.5rem;
+    max-width: 62ch;
+  }
+
+  h2 {
+    font-size: var(--title-sub);
+    letter-spacing: -0.025em;
+    line-height: 1.12;
+  }
+
+  a :global(svg) {
+    transition: transform 0.35s var(--ease-out);
+  }
+
+  a:hover :global(svg) {
+    transform: translateX(4px);
+  }
+
+  @media (max-width: 56rem) {
+    a {
+      grid-template-columns: 1fr auto;
+    }
+
+    time {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

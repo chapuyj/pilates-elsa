@@ -1,6 +1,7 @@
 ---
 // L'en-tête des pages intérieures : grand titre, phrase d'introduction, actions, et une photo facultative.
 import { Image } from 'astro:assets';
+import PhotoNote from './PhotoNote.astro';
 
 interface Props {
   titre: string;
@@ -29,15 +30,18 @@ const avecActions = Astro.slots.has('default');
     </div>
     {
       photo && (
-        <Image
-          src={photo}
-          alt={photoAlt}
-          widths={[480, 800, 1200]}
-          sizes="(min-width: 56rem) 42vw, 100vw"
-          loading="eager"
-          fetchpriority="high"
-          style={`object-position: ${cadrage}`}
-        />
+        <div class="photo">
+          <PhotoNote />
+          <Image
+            src={photo}
+            alt={photoAlt}
+            widths={[480, 800, 1200]}
+            sizes="(min-width: 56rem) 42vw, 100vw"
+            loading="eager"
+            fetchpriority="high"
+            style={`object-position: ${cadrage}`}
+          />
+        </div>
       )
     }
   </div>
@@ -75,19 +79,20 @@ const avecActions = Astro.slots.has('default');
   .with-photo .wrap {
     display: grid;
     grid-template-columns: 6fr 5fr;
-    align-items: end;
+    align-items: center;
     gap: 2.5rem clamp(2rem, 6vw, 6rem);
   }
 
-  .with-photo .text {
-    padding-bottom: clamp(0rem, 2vw, 2rem);
+  .photo {
+    position: relative;
+    border-radius: var(--r-media);
+    overflow: hidden;
   }
 
   .page-head :global(img) {
     width: 100%;
     aspect-ratio: 4 / 5;
     max-height: 42rem;
-    border-radius: var(--r-media);
     object-fit: cover;
   }
 

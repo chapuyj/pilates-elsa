@@ -1,0 +1,47 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "design-system-font-size",
+        "value": "*",
+        "files": [
+          "src/components/Footer.astro"
+        ],
+        "createdAt": "2026-11-17T10:27:08.120Z",
+        "reason": "Grand nom du pied de page, taille calculée par script pour remplir la largeur exacte : hors échelle par construction (décision de l'agent, documentée dans DESIGN.md, section Shapes)"
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "*",
+        "files": [
+          "src/components/PhotoNote.astro"
+        ],
+        "createdAt": "2026-11-17T10:27:08.133Z",
+        "reason": "Repère « photo provisoire » visible uniquement en développement, jamais publié (décision de l'agent, DESIGN.md Do's and Don'ts)"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#f6e3b4",
+        "createdAt": "2026-11-17T10:27:08.148Z",
+        "reason": "Surlignage « à compléter » visible uniquement en développement, jamais publié (décision de l'agent)"
+      },
+      {
+        "rule": "design-system-radius",
+        "value": "4px",
+        "createdAt": "2026-11-17T10:27:08.162Z",
+        "reason": "Coin du surlignage « à compléter », visible uniquement en développement (décision de l'agent)"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/**"
+        ],
+        "createdAt": "2026-11-17T10:27:58.703Z",
+        "reason": "Esquisses jetables de la page de décision (directions non retenues), dessinées volontairement avec d'autres polices ; ignorées par git et jamais publiées (décision de l'agent)"
+      }
+    ]
+  }
+}

@@ -6,7 +6,7 @@ resume: Des cours dans vos locaux, pour vos équipes, à un rythme régulier ou 
 description: Cours de Pilates en entreprise dans le Val-de-Marne et à Paris. Elsa se déplace dans vos locaux pour un cours régulier ou un atelier ponctuel.
 action: contact
 photo: ../../assets/photos/offre-entreprise.jpg
-photoAlt: Trois personnes allongées sur des tapis, une jambe tendue vers le plafond, dans une salle lumineuse.
+photoAlt: Plusieurs personnes penchées vers l'avant sur leur tapis, dans une salle lumineuse.
 ---
 
 Elsa se déplace dans vos locaux pour faire pratiquer vos équipes. Le Pilates demande peu de place et peu de matériel : une salle de réunion dégagée et des tapis suffisent.

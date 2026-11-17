@@ -11,6 +11,15 @@ import { dansLOrdre } from '../lib/listes';
 import { afficherPrix } from '../lib/prix';
 
 const tarifs = dansLOrdre(await getCollection('tarifs'));
+
+// Une ligne de tarifs.yaml dont l'offre n'existe pas est une faute de frappe : mieux vaut le dire tout de suite.
+const toutesLesOffres = (await getCollection('offres')).map((offre) => offre.id);
+const inconnue = tarifs.find((tarif) => !toutesLesOffres.includes(tarif.data.offre));
+if (inconnue) {
+  throw new Error(
+    `src/data/tarifs.yaml : la ligne « ${inconnue.id} » cite l'offre « ${inconnue.data.offre} », qui n'existe pas dans src/content/offres/. Offres possibles : ${toutesLesOffres.join(', ')}.`,
+  );
+}
 const groupes = (await offresPubliees())
   .map((offre) => ({ offre, lignes: tarifs.filter((tarif) => tarif.data.offre === offre.id) }))
   .filter((groupe) => groupe.lignes.length > 0);
@@ -77,7 +86,7 @@ const groupes = (await offresPubliees())
   }
 
   .group-head h2 {
-    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    font-size: var(--title-sub);
   }
 
   .rows li {

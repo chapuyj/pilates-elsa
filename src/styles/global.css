@@ -9,9 +9,9 @@
   --ink-hover: #3d342c;
   --ink-soft: #675d54;
   --wood: #a98463;
-  --wood-deep: #7b5b3f;
   --on-ink: #ffffff;
   --on-ink-soft: #d9cfc4;
+  --error: #a3321f;
 
   /* Typographie */
   --font: 'Figtree Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
@@ -20,6 +20,7 @@
   --text-lead: clamp(1.125rem, 1.3vw, 1.25rem);
   --title-3: clamp(1.25rem, 1.6vw, 1.5rem);
   --title-2: clamp(2rem, 3.8vw, 3.25rem);
+  --title-sub: clamp(1.625rem, 2.6vw, 2.125rem);
   --title-1: clamp(2.75rem, 6.2vw, 5.25rem);
   --title-page: clamp(2.5rem, 5.4vw, 4.5rem);
   --statement: clamp(1.75rem, 3.4vw, 3rem);
@@ -126,7 +127,6 @@ a {
 :focus-visible {
   outline: 2px solid var(--ink);
   outline-offset: 3px;
-  border-radius: 6px;
 }
 
 .on-dark :focus-visible,
@@ -281,7 +281,7 @@ a {
 
 .prose h2 {
   margin-top: 2.2em;
-  font-size: clamp(1.625rem, 2.6vw, 2.125rem);
+  font-size: var(--title-sub);
   letter-spacing: -0.025em;
   line-height: 1.12;
 }
@@ -365,9 +365,11 @@ a {
   background: var(--linen);
 }
 
-/* Information encore manquante : visible seulement pendant le développement */
+/* Information encore manquante : surlignée seulement pendant le développement.
+   Sur le site publié, le texte reste lisible sans surlignage ; la mise en ligne publique
+   (indexable: true) est de toute façon bloquée tant que ces informations manquent. */
 
-.a-completer {
+[data-dev] .a-completer {
   background: #f6e3b4;
   border-radius: 4px;
   padding: 0.05em 0.35em;
