@@ -2,6 +2,8 @@
 
 Ces réponses servent à écrire les textes du site. Des réponses courtes suffisent, même en vrac. Ce qui n'est pas encore décidé peut rester vide : le site affichera « sur demande » plutôt qu'une information inventée.
 
+**Comment répondre** : écrire la réponse directement sous la question, en commençant la ligne par `> ` et en ajoutant la date, par exemple `> 18/11/2026 : Elsa Martin`. Une fois l'information reportée dans le site, cocher le point correspondant dans `TODO.md`. Les questions qui débloquent le plus de choses y sont listées en premier (section « En attente d'Elsa »).
+
 ## 1. Toi et ta pratique
 
 1. Ton nom tel qu'il doit apparaître sur le site (prénom seul, prénom + nom ?).

@@ -8,7 +8,7 @@ web
 
 ## Stack
 
-Astro, site entièrement statique. Contenus en fichiers Markdown et YAML dans le dépôt, modifiés par Jordan via git (pas de CMS). Hébergement Cloudflare Pages avec déploiement à chaque push. Node 26 épinglé par `mise.toml`. Choix proposé et confirmé par l'utilisateur.
+Astro, site entièrement statique. Contenus en fichiers Markdown et YAML dans le dépôt, modifiés par Jordan via git (pas de CMS). Hébergement prévu sur Cloudflare avec déploiement à chaque push (Workers plutôt que Pages, voir `TODO.md`). Node 26 épinglé par `mise.toml`. Choix proposé et confirmé par l'utilisateur.
 
 ## Users
 
@@ -45,7 +45,7 @@ Ces trois points viennent de Jordan. La formulation d'Elsa elle-même reste à r
 - Maintenance simple : changer un texte, un prix ou une photo se fait dans un seul fichier. Chaque information n'existe qu'à un seul endroit.
 - Référencement local soigné : c'est un objectif de premier rang, pas une finition.
 - Français uniquement.
-- Non décidé : nom de l'activité et nom de domaine, tarifs, zone de déplacement, liste des machines maîtrisées, tutoiement ou vouvoiement, service d'envoi d'e-mail du formulaire, statut et diplômes complémentaires d'Elsa.
+- Non décidé : nom de l'activité et nom de domaine, tarifs, zone de déplacement, liste des machines maîtrisées, tutoiement ou vouvoiement, service d'envoi d'e-mail du formulaire, statut et diplômes complémentaires d'Elsa. Le suivi de ces points est dans `TODO.md`.
 
 ## Brand Commitments
 
@@ -60,7 +60,7 @@ Ces trois points viennent de Jordan. La formulation d'Elsa elle-même reste à r
 - Faits publics sur Revolt et Reformation (durée, modules, examens, prérequis), à faire valider par Elsa avant publication.
 - Elsa figure sur la page équipe de LM Studio comme coach Reformer.
 - Absents, à ne pas inventer : témoignages et avis, tarifs, photos d'Elsa, chiffres (nombre d'élèves, années d'enseignement), diplômes autres que Revolt.
-- Questionnaire de collecte : `docs/questions-elsa.md`.
+- Questionnaire de collecte : `docs/questions-elsa.md`. Faits publics sur sa formation et les studios, avec leurs sources : `docs/recherches.md`.
 
 ## Product Principles
 
